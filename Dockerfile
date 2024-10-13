@@ -32,6 +32,8 @@ FROM openjdk:11-jre-slim
 
 WORKDIR /app
 
-COPY haveen.jar /app/haveen.jar
+COPY target/havenDeed.jar /app/havenDeed.jar
 
-CMD ["java", "-jar", "haveen.jar"]
+EXPOSE 8080
+
+CMD ["java", "-jar", "havenDeed.jar"]
