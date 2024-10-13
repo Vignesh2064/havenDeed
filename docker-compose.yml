@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8                          # MySQL service
+    environment:
+      MYSQL_ROOT_PASSWORD: PHW#84#jeor      # Set MySQL root password
+      MYSQL_DATABASE: havenDeed             # Create database if not exists
+    ports:
+      - "3306:3306"                         # Expose MySQL on port 3306
+    volumes:
+      - mysql_data:/var/lib/mysql           # Persist MySQL data
+      - ./mysql-init:/docker-entrypoint-initdb.d  # Initialize with SQL script
+    healthcheck:                            # Ensure MySQL is healthy before app starts
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: ./app                        # Build the Spring Boot app from Dockerfile in /app
+    ports:
+      - "8080:8080"                         # Expose Spring Boot app on port 8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/havenDeed
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: PHW#84#jeor
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+    depends_on:
+      db:
+        condition: service_healthy          # Ensure MySQL is healthy before the app starts
+
+volumes:
+  mysql_data:                               # Named volume for MySQL data
