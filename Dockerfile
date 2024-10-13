@@ -28,14 +28,10 @@
 # ENTRYPOINT exec java -jar app.jar
 # # ENTRYPOINT ["java", "-jar", "app.jar", "--spring.config.location=file:/application.properties"]
 
-FROM openjdk:8u151-jdk-alpine3.7
-  
-EXPOSE 8080
- 
-ENV APP_HOME /usr/src/app
+FROM openjdk:11-jre-slim
 
-COPY target/havendeed.jar $APP_HOME/app.jar
+WORKDIR /app
 
-WORKDIR $APP_HOME
+COPY haveen.jar /app/haveen.jar
 
-ENTRYPOINT exec java -jar app.jar
+CMD ["java", "-jar", "haveen.jar"]
